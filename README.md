@@ -18,5 +18,5 @@
 ## 注意
 ### 此项目需要保留署名！
 # 赞助商
-![Catixs]([图片地址](https://my.catixs.net/templates/lagom2/assets/img/logo/logo_big.1493148437.png) ''赞助商'')
-<a href="[超链接地址](https://my.catixs.net)" target="_blank">服务器(独家)赞助商Catixs</a>
+![Catixs]([赞助商Logo](https://my.catixs.net/templates/lagom2/assets/img/logo/logo_big.1493148437.png ''赞助商'')
+<a href="https://my.catixs.net" target="_blank">服务器(独家)赞助商Catixs</a>
