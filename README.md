@@ -4,7 +4,7 @@
   快速构建属于自己的第三方操作系统～<br>助力第三方系统封装者
 </p>
 <p align="center">
- <a href="https://docs.autobuild.win"> ✨ 前往文档  施工中......</a>
+ <a href="https://docs.autobuild.win"> ✨ 前往文档</a>
 </p>
 
 
