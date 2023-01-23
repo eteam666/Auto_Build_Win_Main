@@ -1,4 +1,39 @@
 # -*- coding: utf-8 -*-
+import importlib.util
+import os
+def module_exists(module_name):
+    spec = importlib.util.find_spec(module_name)
+    return spec is not None
+if module_exists("requests"):
+    print("模块存在")
+else:
+    print("模块不存在")
+    os.system("pip install requests")
+if module_exists("urllib3"):
+    print("模块存在")
+else:
+    print("模块不存在")
+    os.system("pip install urllib3")
+if module_exists("configparser"):
+    print("模块存在")
+else:
+    print("模块不存在")
+    os.system("pip install configparser")
+if module_exists("patool"):
+    print("模块存在")
+else:
+    print("模块不存在")
+    os.system("pip install patool")
+if module_exists("zip_files"):
+    print("模块存在")
+else:
+    print("模块不存在")
+    os.system("pip install zip_files")
+if module_exists("python-wordpress-xmlrpc"):
+    print("模块存在")
+else:
+    print("模块不存在")
+    os.system("pip install python-wordpress-xmlrpc") 
 import sqlite3
 import os
 import requests
