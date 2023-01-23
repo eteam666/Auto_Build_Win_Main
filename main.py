@@ -16,6 +16,8 @@ import time
 from multiprocessing import Process
 import random
 import string
+from wordpress_xmlrpc import Client, WordPressPost
+from wordpress_xmlrpc.methods.posts import NewPost
 # 加载配置文件
 config = configparser.ConfigParser()
 config.read('Config.ini')
@@ -34,9 +36,17 @@ Subject = config['Mail']['Subject']
 Server = config['Mail']['Server']
 User = config['Mail']['User']
 PassWord= config['Mail']['Password']
+remotes = config.get('Rclone', 'remotes').split(',')
+folder = config['Rclone']['folder']
+UseRclone = config['Rclone']['Use']
+UseNewPost = config['NewPost']['Use']
+WPURL = config['NewPost']['WPURL']
+WPUser = config['NewPost']['WPUser']
+WPPassword = config['NewPost']['WPPassword']
+PostTitle = config['NewPost']['WPTitle']
 smtp_log_config = {'server': Server,'user': User,'password': PassWord,'sender': Sender,'receiver': Receiver,'subject': Subject}
 txt_log_config = {'file': 'log.txt'}
-Verison = '1.0'
+Verison = '1.1.0'
 DOWNLOAD_PATH = os.getcwd()
 updateId = ''
 TempISO = DOWNLOAD_PATH + '\\Temp\\' + 'ISO'
@@ -234,12 +244,14 @@ def Check():
 def CheckVerison():
     global updateId
     global NewVer
+    global foundBuild
     logger.log(5)
     CheckUrl = f'{ApiUrl}/fetchupd.php?arch=amd64&ring=retail&build={BuildID}'
     response = requests.get(CheckUrl)
     if response.status_code == 200:
         data = json.loads(response.content)
         updateId = data['response']['updateId']
+        foundBuild = data['response']["foundBuild"]
     else:
         Change(0)
         logger.log(6)
@@ -302,35 +314,61 @@ def Mount():
     logger.log(18)
     return
 def fina():
-    logger.log(19)
-    logger.log(20)
+    logger.log(23)
+    logger.log(24)
     folder = DOWNLOAD_PATH + 'Temp'
     if os.path.exists(MountDir):
         cmd = 'dism /Unmount-Image /MountDir:' + MountDir + ' /Discard'
         os.system(cmd)
-        logger.log(21)
-    else:
-        logger.log(22) 
-    if os.path.exists(Temp):
-        shutil.rmtree(Temp)
-        logger.log(23)
-    else:
-        logger.log(24)
-    if os.path.exists(TempISO):
-        shutil.rmtree(TempISO)
         logger.log(25)
     else:
-        logger.log(26)
+        logger.log(26) 
+    if os.path.exists(Temp):
+        shutil.rmtree(Temp)
+        logger.log(27)
+    else:
+        logger.log(28)
+    if os.path.exists(TempISO):
+        shutil.rmtree(TempISO)
+        logger.log(29)
+    else:
+        logger.log(30)
     conn = sqlite3.connect("data.db")
     cursor = conn.cursor()
     cursor.execute("INSERT INTO verison (updateId) VALUES (?)", (updateId))
     conn.commit()
     conn.close()
-    logger.log(27)
-    logger.log("部署已经完成，将自动退出")
-    logger.log("updateId:" + updateId)
+    logger.log(31)
+    print("部署已经完成，将自动退出")
+    print("updateId:" + updateId)
     return
-
+def Upload():
+    Change(5)
+    logger.log("19")
+    if UseRclone:
+        for remote in remotes:
+            subprocess.run(["rclone", "copy", ESD, f"{remote}:backup"])
+    logger.log("20")
+def NewPost():
+    logger.log(21)
+    if UseNewPost != 1:
+        return
+    else:
+        Post = f'''
+    # 欢迎使用自动构建~
+    镜像名称：{ImageName}
+    版本号：{foundBuild}
+    构建ID:{rid}
+    '''
+        # Connect to WordPress
+        wp = Client(WPURL, WPUser, WPPassword)
+        # Create a new post
+        post = WordPressPost()
+        post.title = PostTitle
+        post.content = Post
+        post.post_status = 'publish'
+        post.id = wp.call(NewPost(post))
+    logger.log(22)
 if __name__ == '__main__':
     init()
     while True:
@@ -353,5 +391,9 @@ if __name__ == '__main__':
                 Mount()
             if OK==1:
                 fina()
+            if OK==1:
+                Upload()
+            if OK==1:
+                NewPost()
                 END(1)
         END(2)
