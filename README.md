@@ -22,3 +22,5 @@
 # 赞助商
 ![Catixs赞助商Logo](https://my.catixs.net/templates/lagom2/assets/img/logo/logo_big.1493148437.png)
 <a href="https://my.catixs.net" target="_blank">服务器(独家)赞助商Catixs</a>
+[支持一下~,虽然是赞助的服务器，但是您支持了我会给服务器商减少亏损~](https://afdian.net/a/
+easysys)
