@@ -312,10 +312,10 @@ def Get():
     folder = DOWNLOAD_PATH
     filename = 'Temp\\ConvertConfig.ini'
     filepath = os.path.join(folder, filename)
-    urllib.request.urlretrieve('https://file.autobuild.win/config.ini', filepath)
+    urllib.request.urlretrieve('https://cdn.jsdelivr.net/gh/eteam666/files/config.ini', filepath)
     filename = 'Temp\\files\\depends_win.ps1'
     filepath = os.path.join(folder, filename)
-    urllib.request.urlretrieve('https://file.autobuild.win/depends_win.ps1', filepath)
+    urllib.request.urlretrieve('https://cdn.jsdelivr.net/gh/eteam666/files/depends_win.ps1', filepath)
     cmd = Temp + "\\uup_download_windows.cmd"
     os.system(cmd)
     logger.log(11)
