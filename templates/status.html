@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<head>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<div class="relative flex min-h-screen flex-col justify-center overflow-hidden bg-gray-50 py-6 sm:py-12">
+    <div class="absolute inset-0 bg-[url(/img/grid.svg)] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]"></div>
+    <div class="relative bg-white px-6 pt-10 pb-8 shadow-xl ring-1 ring-gray-900/5 sm:mx-auto sm:max-w-lg sm:rounded-lg sm:px-10">
+      <div class="mx-auto max-w-md">
+        <div class="divide-y divide-gray-300/50">
+          <div class="space-y-6 py-8 text-base leading-7 text-gray-600">
+            <p class="text-center text-5xl text-red-800">Auto Build Win Web 控制台</p>
+        {% for item in data %}
+            {% if item[0] == 0 %}
+                <svg t="1673866487903" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3769" width="200" height="200"><path d="M512 0a512 512 0 0 0-512 512 512 512 0 0 0 512 512 512 512 0 0 0 512-512 512 512 0 0 0-512-512z" fill="#FD6B6D" p-id="3770"></path><path d="M513.755429 565.540571L359.277714 720.018286a39.058286 39.058286 0 0 1-55.296-0.073143 39.277714 39.277714 0 0 1 0.073143-55.442286l154.331429-154.331428-155.062857-155.136a36.571429 36.571429 0 0 1 51.712-51.785143l365.714285 365.714285a36.571429 36.571429 0 1 1-51.785143 51.785143L513.755429 565.540571z m157.549714-262.582857a35.254857 35.254857 0 1 1 49.737143 49.737143l-106.057143 108.982857a35.254857 35.254857 0 1 1-49.883429-49.810285l106.203429-108.982858z" fill="#FFFFFF" p-id="3771"></path></svg>
+            {% elif item[0] == 1 %}
+                <svg t="1673866371006" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2686" width="200" height="200"><path d="M0 0h1024v1024H0V0z" fill="#202425" opacity=".01" p-id="2687"></path><path d="M955.733333 512c0 245.077333-198.656 443.733333-443.733333 443.733333S68.266667 757.077333 68.266667 512 266.922667 68.266667 512 68.266667s443.733333 198.656 443.733333 443.733333z" fill="#11AA66" p-id="2688"></path><path d="M512 102.4C285.7984 102.4 102.4 285.7984 102.4 512s183.3984 409.6 409.6 409.6 409.6-183.3984 409.6-409.6S738.2016 102.4 512 102.4zM34.133333 512C34.133333 248.081067 248.081067 34.133333 512 34.133333s477.866667 213.947733 477.866667 477.866667-213.947733 477.866667-477.866667 477.866667S34.133333 775.918933 34.133333 512z" fill="#11AA66" p-id="2689"></path><path d="M787.114667 339.285333a51.2 51.2 0 0 1 0 72.362667l-307.2 307.2a51.2 51.2 0 0 1-72.362667 0l-170.666667-170.666667a51.2 51.2 0 0 1 72.362667-72.362666L443.733333 610.235733l271.018667-271.018666a51.2 51.2 0 0 1 72.362667 0z" fill="#FFFFFF" p-id="2690"></path></svg>
+            {% elif item[0] == 2 %}
+                <div class="mx-auto w-16 h-16 border-4 border-dashed rounded-full animate-spin dark:border-violet-400"></div>
+            {% elif item[0] == 3 %}
+                <div class="mx-auto w-16 h-16 border-4 border-dashed rounded-full animate-spin dark:border-violet-400"></div>
+            {% elif item[0] == 4 %}
+                <div class="mx-auto w-16 h-16 border-4 border-dashed rounded-full animate-spin dark:border-violet-400"></div>
+            {% endif %}
+        {% endfor %}
+        <p class="4xl text-center text-green text-3xl">
+            {% for item in data %}
+                {% if item[0] == 0 %}
+                    错误.请查看控制台输出
+                {% elif item[0] == 1 %}
+                    正常
+                {% elif item[0] == 2 %}
+                    下载中
+                {% elif item[0] == 3 %}
+                    构建中
+                {% elif item[0] == 4 %}
+                    处理中
+                {% elif item[0] == 5 %}
+                    上传中
+                {% endif %}
+            {% endfor %}
+        </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<div class="mt-8 flex flex-col">
+    <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+      <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+        <table class="min-w-full divide-y divide-gray-300">
+          <thead>
+            <tr>
+              <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6 md:pl-0">RID</th>
+              <th scope="col" class="py-3.5 px-3 text-left text-sm font-semibold text-gray-900">启动时间</th>
+              <th scope="col" class="py-3.5 px-3 text-left text-sm font-semibold text-gray-900">结束时间</th>
+              <th scope="col" class="py-3.5 px-3 text-left text-sm font-semibold text-gray-900">状态</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200">
+            {% for item in table %}
+            <tr>
+              <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 md:pl-0">{{ item["rid"] }}</td>
+              <td class="whitespace-nowrap py-4 px-3 text-sm text-gray-500">{{ item["starttime"] }}</td>
+              <td class="whitespace-nowrap py-4 px-3 text-sm text-gray-500">{{ item["endtime"] }}</td>
+              <td class="whitespace-nowrap py-4 px-3 text-sm text-gray-500">
+                {% if item["status"] == 0 %}
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium bg-red-100 text-red-800"> 错误 </span>
+                {% elif item["status"] == 1 %}
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium bg-green-100 text-green-800"> 已完成 </span>
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium bg-green-100 text-green-800"> 有新版本 </span>
+                {% elif item["status"] == 2 %}
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium bg-green-100 text-green-800"> 已完成 </span>
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium bg-red-100 text-red-800"> 无新版本 </span>
+                {% elif item["status"] == 3 %}
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium bg-blue-100 text-blue-800"> 运行中...... </span>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+    </div>
+</div>
+
+

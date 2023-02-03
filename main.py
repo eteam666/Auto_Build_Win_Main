@@ -1,39 +1,26 @@
 # -*- coding: utf-8 -*-
+DOWNLOAD_PATH = os.getcwd()
+Config_ini = DOWNLOAD_PATH + '\\Config\\Config.ini'
+Lang_ini = DOWNLOAD_PATH + '\\Config\\Lang.ini'
 import importlib.util
 import os
 def module_exists(module_name):
     spec = importlib.util.find_spec(module_name)
     return spec is not None
-if module_exists("requests"):
-    print("模块存在")
-else:
-    print("模块不存在")
-    os.system("pip install requests")
-if module_exists("urllib3"):
-    print("模块存在")
-else:
-    print("模块不存在")
-    os.system("pip install urllib3")
-if module_exists("configparser"):
-    print("模块存在")
-else:
-    print("模块不存在")
-    os.system("pip install configparser")
-if module_exists("patool"):
-    print("模块存在")
-else:
-    print("模块不存在")
-    os.system("pip install patool")
-if module_exists("zip_files"):
-    print("模块存在")
-else:
-    print("模块不存在")
-    os.system("pip install zip_files")
-if module_exists("python-wordpress-xmlrpc"):
-    print("模块存在")
-else:
-    print("模块不存在")
-    os.system("pip install python-wordpress-xmlrpc") 
+def CheckModule(ModuleName):
+    if module_exists(ModuleName):
+        print("模块存在")
+    else:
+        print("模块不存在")
+        os.system(f"pip install {ModuleName}")
+CheckModule("requests")
+CheckModule("urllib3")
+CheckModule("configparser")
+CheckModule("patool")
+CheckModule("zip_files")
+CheckModule("python-wordpress-xmlrpc")
+CheckModule("telegram")
+import telegram
 import sqlite3
 import os
 import requests
@@ -48,16 +35,16 @@ import smtplib
 import subprocess
 import patoolib
 import time
-from multiprocessing import Process
 import random
 import string
 from wordpress_xmlrpc import Client, WordPressPost
 from wordpress_xmlrpc.methods.posts import NewPost
 # 加载配置文件
 config = configparser.ConfigParser()
-config.read('Config.ini')
+config.read(Config_ini)
 # 读取配置文件中的变量
 LANG = config['Set']['Lang']
+CN = config['Set']['CN']
 UUPUrl = config['Set']['UUPUrl']
 TIME = config['Set']['Time']
 UseESD = config['Set']['UseESD']
@@ -79,20 +66,23 @@ WPURL = config['NewPost']['WPURL']
 WPUser = config['NewPost']['WPUser']
 WPPassword = config['NewPost']['WPPassword']
 PostTitle = config['NewPost']['WPTitle']
+UseTg = config['Tg']['Use']
+TgToken = config['Tg']['Token']
+Chatid = config['Tg']['Chatid']
 smtp_log_config = {'server': Server,'user': User,'password': PassWord,'sender': Sender,'receiver': Receiver,'subject': Subject}
-txt_log_config = {'file': 'log.txt'}
 Verison = '1.1.0'
-DOWNLOAD_PATH = os.getcwd()
 updateId = ''
 TempISO = DOWNLOAD_PATH + '\\Temp\\' + 'ISO'
 MountDir = DOWNLOAD_PATH +  '\\Mount'
 Temp = DOWNLOAD_PATH + '\\Temp'
 cmd = Temp + '\\uup_download_windows.cmd'
 ESD = Temp + '\\' + ImageName + '.esd'
+Webdb = DOWNLOAD_PATH + '\\Db\\web.db'
+DataDb = DOWNLOAD_PATH + '\\Db\\data.db'
 OK=1
 def ERROR():
         # 连接到数据库
-        conn = sqlite3.connect('web.db')
+        conn = sqlite3.connect(Webdb)
         # 创建游标
         cursor = conn.cursor()
         if id == 1:
@@ -108,7 +98,7 @@ def ERROR():
 def END(id):
         gettime()
         # 连接到数据库
-        conn = sqlite3.connect('web.db')
+        conn = sqlite3.connect(Webdb)
         # 创建游标
         cursor = conn.cursor()
         # 更新指定行的值
@@ -131,7 +121,7 @@ def END(id):
         conn.close()
 def NewLog():
         # 连接到数据库（如果数据库不存在，会自动新建）
-        conn = sqlite3.connect('web.db')
+        conn = sqlite3.connect(Webdb)
         # 创建游标
         cursor = conn.cursor()
         gettime()
@@ -144,8 +134,8 @@ def NewLog():
 def random_string(length):
     return ''.join(random.choices(string.ascii_uppercase+string.ascii_lowercase+string.digits+string.ascii_uppercase+string.ascii_lowercase, k=length))
 def init():
-    if not os.path.exists('data.db'):
-        conn = sqlite3.connect('data.db')
+    if not os.path.exists(DataDb):
+        conn = sqlite3.connect(DataDb)
         cursor = conn.cursor()
         try:
             cursor.execute("CREATE TABLE verison (updateId INTEGER)")
@@ -153,8 +143,8 @@ def init():
             pass
         conn.commit()
         conn.close()
-    if not os.path.exists('web.db'):
-        conn = sqlite3.connect('web.db')
+    if not os.path.exists(Webdb):
+        conn = sqlite3.connect(Webdb)
         cursor = conn.cursor()
         cursor.execute('''CREATE TABLE status (status int)''')
         cursor.execute("INSERT INTO status (status) VALUES (2)")
@@ -166,7 +156,7 @@ def init():
         conn.close()
 
 def Change(id):
-    conn = sqlite3.connect("web.db")
+    conn = sqlite3.connect(Webdb)
     cursor = conn.cursor()
     cursor.execute("UPDATE status SET status = ?", (id,))
     conn.commit()
@@ -186,10 +176,14 @@ class Logger:
         server = smtplib.SMTP()
         server.sendmail(Sender,Receiver, msg)
         server.quit()
-    def log_to_txt(self, message, config):
-        with open(config['file'], 'a') as f:
-            gettime()
-            f.write(localtime + " ： " + message + '\n')
+    def log_to_tg(self, message):
+        if UseTg != 1:
+            return
+        if CN == 1 :
+            return
+        gettime()
+        bot = telegram.Bot(token=TgToken)
+        bot.send_message(chat_id=Chatid, text=f'最新状态{localtime}:{message}')
     def log_to_console(self, message):
         gettime()
         print(localtime + " ： " + message)
@@ -197,19 +191,19 @@ class Logger:
         for log_type, log_config in zip(self.log_types, self.log_configs):
                 # 加载配置文件
             config = configparser.ConfigParser()
-            config.read('Lang.ini', encoding='utf-8')
+            config.read(Lang_ini, encoding='utf-8')
 
             message = config[LANG][str(id)]
             if log_type == 'smtp':
                 if UseMail != 1:
                     return
                 self.log_to_smtp(message, log_config)
-            elif log_type == 'txt':
-                self.log_to_txt(message, log_config)
+            elif log_type == 'tg':
+                self.log_to_tg(message)
             elif log_type == 'console':
                 self.log_to_console(message)
 def search_updateId(updateId):
-        conn = sqlite3.connect("data.db")
+        conn = sqlite3.connect(DataDb)
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM verison WHERE updateId=?", (updateId,))
         result = cursor.fetchone()
@@ -313,9 +307,10 @@ def Get():
     filename = 'Temp\\ConvertConfig.ini'
     filepath = os.path.join(folder, filename)
     urllib.request.urlretrieve('https://cdn.jsdelivr.net/gh/eteam666/files/config.ini', filepath)
-    filename = 'Temp\\files\\depends_win.ps1'
-    filepath = os.path.join(folder, filename)
-    urllib.request.urlretrieve('https://cdn.jsdelivr.net/gh/eteam666/files/depends_win.ps1', filepath)
+    if CN ==1:       
+        filename = 'Temp\\files\\depends_win.ps1'
+        filepath = os.path.join(folder, filename)
+        urllib.request.urlretrieve('https://cdn.jsdelivr.net/gh/eteam666/files/depends_win.ps1', filepath)
     cmd = Temp + "\\uup_download_windows.cmd"
     os.system(cmd)
     logger.log(11)
@@ -328,14 +323,32 @@ def Build():
         if os.path.splitext(file)[1] == ".ISO":
             logger.log(13)
             break
-    DOWNLOAD_PATH = os.getcwd()
     ISO =  DOWNLOAD_PATH + '\\Temp\\' + file
     logger.log(14)
     patoolib.extract_archive(ISO, outdir=TempISO)
     Wim = DOWNLOAD_PATH + "\\Temp\\ISO\\sources\\install.wim"
     logger.log(15)
     subprocess.run(["dism", "/Mount-Wim", "/WimFile:" + Wim , "/index:2", "/MountDir:" + MountDir ])
-    os.system(DOWNLOAD_PATH + "\\Build.cmd")
+    if not os.path.exists(DOWNLOAD_PATH + '\\Pack.ini'):
+        print("正在执行CMD......")
+    else:
+        config.read('Pack.ini')
+        PackName = ["Config"]["Name"]
+        To = ["Config"]["To"]
+        if To == "MountDir":
+            To=MountDir
+        if To == "Root":
+            To=DOWNLOAD_PATH
+        if To == "Temp":
+            To=Temp
+        File = To + '\\' + PackName
+        patoolib.extract_archive(File, outdir=To)
+        Run = ["Config"]["Run"]
+        CMD = f'cd {To}\\ && {Run}'
+        os.system(CMD)
+        logger.log(16)
+        return
+    os.system(DOWNLOAD_PATH + "\\File\\Build.cmd")
     logger.log(16)
     return
 def Mount():
@@ -368,7 +381,7 @@ def fina():
         logger.log(29)
     else:
         logger.log(30)
-    conn = sqlite3.connect("data.db")
+    conn = sqlite3.connect(DataDb)
     cursor = conn.cursor()
     cursor.execute("INSERT INTO verison (updateId) VALUES (?)", (updateId))
     conn.commit()
@@ -410,7 +423,7 @@ if __name__ == '__main__':
         rid = random_string(8)
         NewLog()
         time.sleep(int(TIME))
-        logger = Logger(['console', 'smtp', 'txt'], [{},smtp_log_config, txt_log_config])
+        logger = Logger(['console', 'smtp', 'tg'], [{},smtp_log_config])
         if OK==1:
             Welcome()
         if OK==1:
