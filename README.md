@@ -17,10 +17,10 @@
 * 可以Web端查看程序状态
 * 可以Rclone上传到多个存储策略
 * 可以自动新建WordPress文章
+* 支持Telegram通知
 ## 注意
 ### 此项目需要保留署名！
 # 赞助商
-![Catixs赞助商Logo](https://my.catixs.net/templates/lagom2/assets/img/logo/logo_big.1493148437.png)
-<a href="https://my.catixs.net" target="_blank">服务器(独家)赞助商Catixs</a>  
-<a href="https://afdian.net/a/
-easysys">支持一下~,虽然是赞助的服务器，但是您支持了我会给服务器商减少亏损~</a>
+![Catixs赞助商Logo](https://my.catixs.net/templates/lagom2/assets/img/logo/logo_big.1493148437.png)   
+<a href="https://my.catixs.net" target="_blank">服务器(独家)赞助商Catixs</a>   
+<a href="https://afdian.net/a/easysys">支持一下~,虽然是赞助的服务器，但是您支持了我会给服务器商减少亏损~</a>
