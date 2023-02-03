@@ -8,7 +8,7 @@
 </p>
 
 
-# 最新版本1.1
+## 最新版本1.1.5
 ## 优势
 * 快速，使用Python。依赖一些第三方库
 * 支持，社区邮件群聊支持
@@ -26,6 +26,17 @@ Python
 SQLite
 Catixs
 内测组的全体成员
+# 更新日志
+### 1.1.5
+* 修改了版本号和错误
+### 1.1.0
+* 添加了WordPress添加
+* 添加了上传
+* 添加了Telegram通知
+* 更新了Web端并整合
+* 改为SQLite数据库
+### 1.0.0
+* 首个版本
 # 赞助商
 ![Catixs赞助商Logo](https://my.catixs.net/templates/lagom2/assets/img/logo/logo_big.1493148437.png)   
 <a href="https://my.catixs.net" align="center" target="_blank">服务器(独家)赞助商Catixs</a>   
