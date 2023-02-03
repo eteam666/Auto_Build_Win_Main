@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
+import os
 DOWNLOAD_PATH = os.getcwd()
 Config_ini = DOWNLOAD_PATH + '\\Config\\Config.ini'
 Lang_ini = DOWNLOAD_PATH + '\\Config\\Lang.ini'
 import importlib.util
-import os
 def module_exists(module_name):
     spec = importlib.util.find_spec(module_name)
     return spec is not None
@@ -41,7 +41,7 @@ from wordpress_xmlrpc import Client, WordPressPost
 from wordpress_xmlrpc.methods.posts import NewPost
 # 加载配置文件
 config = configparser.ConfigParser()
-config.read(Config_ini)
+config.read(Config_ini, encoding='utf-8')
 # 读取配置文件中的变量
 LANG = config['Set']['Lang']
 CN = config['Set']['CN']
@@ -70,7 +70,7 @@ UseTg = config['Tg']['Use']
 TgToken = config['Tg']['Token']
 Chatid = config['Tg']['Chatid']
 smtp_log_config = {'server': Server,'user': User,'password': PassWord,'sender': Sender,'receiver': Receiver,'subject': Subject}
-Verison = '1.1.0'
+Verison = '1.1.5'
 updateId = ''
 TempISO = DOWNLOAD_PATH + '\\Temp\\' + 'ISO'
 MountDir = DOWNLOAD_PATH +  '\\Mount'
@@ -148,10 +148,7 @@ def init():
         cursor = conn.cursor()
         cursor.execute('''CREATE TABLE status (status int)''')
         cursor.execute("INSERT INTO status (status) VALUES (2)")
-        conn.commit()
-        conn.close()
-        cursor = conn.cursor()
-        cursor.execute('''CREATE TABLE log (starttime TIMESTAMP DEFAULT NULL, endtime TIMESTAMP DEFAULT NULL, rid INTEGER DEFAULT NULL, status INTEGER DEFAULT NULL)''')
+        cursor.execute("CREATE TABLE IF NOT EXISTS log (starttime timestamp, endtime timestamp, rid integer, status integer)")
         conn.commit()
         conn.close()
 
@@ -332,7 +329,7 @@ def Build():
     if not os.path.exists(DOWNLOAD_PATH + '\\Pack.ini'):
         print("正在执行CMD......")
     else:
-        config.read('Pack.ini')
+        config.read('Pack.ini', encoding='utf-8')
         PackName = ["Config"]["Name"]
         To = ["Config"]["To"]
         if To == "MountDir":
