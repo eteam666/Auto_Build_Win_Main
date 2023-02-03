@@ -20,6 +20,12 @@
 * 支持Telegram通知
 ## 注意
 ### 此项目需要保留署名！
+# 致谢
+Microsoft
+Python
+SQLite
+Catixs
+内测组的全体成员
 # 赞助商
 ![Catixs赞助商Logo](https://my.catixs.net/templates/lagom2/assets/img/logo/logo_big.1493148437.png)   
 <a href="https://my.catixs.net" align="center" target="_blank">服务器(独家)赞助商Catixs</a>   
