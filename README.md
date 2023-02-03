@@ -21,11 +21,12 @@
 ## 注意
 ### 此项目需要保留署名！
 # 致谢
-Microsoft
-Python
-SQLite
-Catixs
-内测组的全体成员
+Microsoft  
+Python  
+SQLite  
+Catixs  
+Python的部分第三方库  
+内测组的全体成员  
 # 更新日志
 ### 1.1.5
 * 修改了版本号和错误
