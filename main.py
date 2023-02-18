@@ -8,10 +8,9 @@ def module_exists(module_name):
     spec = importlib.util.find_spec(module_name)
     return spec is not None
 def CheckModule(ModuleName):
+    # 检测模块是否存在
     if module_exists(ModuleName):
-        print("模块存在")
     else:
-        print("模块不存在")
         os.system(f"pip install {ModuleName}")
 CheckModule("requests")
 CheckModule("urllib3")
@@ -20,6 +19,9 @@ CheckModule("patool")
 CheckModule("zip_files")
 CheckModule("python-wordpress-xmlrpc")
 CheckModule("telegram")
+# 导入模块
+from colorama import init,Fore
+init(autoreset=True)
 import telegram
 import sqlite3
 import os
@@ -70,8 +72,9 @@ UseTg = config['Tg']['Use']
 TgToken = config['Tg']['Token']
 Chatid = config['Tg']['Chatid']
 smtp_log_config = {'server': Server,'user': User,'password': PassWord,'sender': Sender,'receiver': Receiver,'subject': Subject}
-Verison = '1.1.5'
+Verison =  Fore.RED + '1.2.0'
 updateId = ''
+V = 'Beta'
 TempISO = DOWNLOAD_PATH + '\\Temp\\' + 'ISO'
 MountDir = DOWNLOAD_PATH +  '\\Mount'
 Temp = DOWNLOAD_PATH + '\\Temp'
@@ -134,25 +137,27 @@ def NewLog():
 def random_string(length):
     return ''.join(random.choices(string.ascii_uppercase+string.ascii_lowercase+string.digits+string.ascii_uppercase+string.ascii_lowercase, k=length))
 def init():
+    # 初始化程序
     if not os.path.exists(DataDb):
         conn = sqlite3.connect(DataDb)
         cursor = conn.cursor()
         try:
-            cursor.execute("CREATE TABLE verison (updateId INTEGER)")
+            cursor.execute("CREATE TABLE IF NOT EXISTS verison (updateId INTEGER)")
         except sqlite3.OperationalError:
             pass
         conn.commit()
         conn.close()
-    if not os.path.exists(Webdb):
+    if not os.path.exists(WebDb):
         conn = sqlite3.connect(Webdb)
         cursor = conn.cursor()
-        cursor.execute('''CREATE TABLE status (status int)''')
-        cursor.execute("INSERT INTO status (status) VALUES (2)")
+        cursor.execute('''CREATE TABLE IF NOT EXISTS status (status int)''')
+        cursor.execute("INSERT IF NOT EXISTS INTO status (status) VALUES (2)")
         cursor.execute("CREATE TABLE IF NOT EXISTS log (starttime timestamp, endtime timestamp, rid integer, status integer)")
         conn.commit()
         conn.close()
 
 def Change(id):
+    #修改状态
     conn = sqlite3.connect(Webdb)
     cursor = conn.cursor()
     cursor.execute("UPDATE status SET status = ?", (id,))
@@ -160,10 +165,12 @@ def Change(id):
     conn.close()
     return
 def gettime():
+    # 获取当前时间
     global localtime
     localtime = time.localtime()
     localtime = time.strftime("%Y-%m-%d %H:%M:%S", localtime)
 class Logger:
+    # 日志类
     def __init__(self, log_types, log_configs):
         self.log_types = log_types
         self.log_configs = log_configs
@@ -209,12 +216,34 @@ def search_updateId(updateId):
             return True
         else:
             return False
-def Welcome():                                                          #欢迎
+def Welcome():
+    #欢迎
     print("欢迎使用Auto Build Windows")
     print("自动构建第三方Windows辅助工具")
     print("本项目不是Microsoft旗下项目")
     print("官网:https://autobuild.win")
     print("程序版本: " + Verison)
+    print("此程序仅支持Windows")
+	resp = urllib.request.urlopen(http://checkip.live/ip)
+    if resp.status == 200:
+        IP = resp.read()
+        data = json.loads(IP)
+        IP = data['data']['ip']
+        IP = hash(IP)
+        GetVer = f'https://check.autobuild.win/{V}.php?ip={IP}'
+        resp = urllib.request.urlopen(GetVer)
+		if resp.status == 200:
+			NewVer = resp.read()
+			data = json.loads(NewVer)
+			NewVer = data['data']['NewVer']
+			Exit = data['data']['Exit']
+			if NewVer != Verison:
+				print("当前程序不是最新版本")
+			NewVer = f'{V}的最新版本是{NewVer}'
+			print(NewVer)
+			if Exit == 1:
+				print("由于服务器要求退出，程序自动退出")
+				exit()
     resp = urllib.request.urlopen(ApiUrl)
     if resp.status == 200:
         NewVerison = resp.read()
@@ -223,6 +252,9 @@ def Welcome():                                                          #欢迎
         print("UUP API最新版本：" + NewVerison)
         NewVerison = data['jsonApiVersion']
         print("UUP API最新版本：" + NewVerison)
+    else:
+		print("连接到API服务器错误!")
+
     print("""
                 _          ____        _ _     _  __          ___           _                   
      /\        | |        |  _ \      (_) |   | | \ \        / (_)         | |                  
@@ -232,7 +264,8 @@ def Welcome():                                                          #欢迎
  /_/    \_\__,_|\__\___/  |____/ \__,_|_|_|\__,_|     \/  \/   |_|_| |_|\__,_|\___/ \_/\_/ |___/
 """)
 def Check():
-    Change(1)                                                           #检察环境
+    #检查环境
+    Change(1)
     logger.log(1)
     OS_StringName = "系统: "
     if platform == "linux" or platform == "linux2":
@@ -268,6 +301,7 @@ def Check():
     logger.log(4)
     return
 def CheckVerison():
+    # 获取版本
     global updateId
     global NewVer
     global foundBuild
@@ -290,6 +324,7 @@ def CheckVerison():
         logger.log(8)    
     logger.log(9)
 def Get():
+    # 获取镜像
     Change(2)
     logger.log(10)
     GetUrl = f'{UUPUrl}/get.php?id={updateId}&pack={LANG}&edition=core;professional&autodl=2'
@@ -313,6 +348,7 @@ def Get():
     logger.log(11)
     return
 def Build():
+    # 开始构建
     Change(3)
     logger.log(12)
     files = os.listdir(Temp)
@@ -349,16 +385,18 @@ def Build():
     logger.log(16)
     return
 def Mount():
+    # 挂载镜像
     Change(4)
     logger.log(17)
     if(UseESD == 1):
-        cmd ='wimlib-imagex.exe capture ' + MountDir + ' ' + ESD + ' ' + ImageName + '--check --solid'  
+        cmd = 'wimlib-imagex.exe capture ' + MountDir + ' ' + ESD + ' ' + ImageName + '--check --solid'  
     else:
         cmd = 'dism /Capture-Image /ImageFile:' + Temp +' /CaptureDir:' + MountDir
     os.system(cmd)
     logger.log(18)
     return
 def fina():
+    # 收尾工作
     logger.log(23)
     logger.log(24)
     folder = DOWNLOAD_PATH + 'Temp'
@@ -388,6 +426,7 @@ def fina():
     print("updateId:" + updateId)
     return
 def Upload():
+    # 上传
     Change(5)
     logger.log("19")
     if UseRclone:
@@ -395,6 +434,7 @@ def Upload():
             subprocess.run(["rclone", "copy", ESD, f"{remote}:backup"])
     logger.log("20")
 def NewPost():
+    # 新建文章
     logger.log(21)
     if UseNewPost != 1:
         return
@@ -441,4 +481,5 @@ if __name__ == '__main__':
             if OK==1:
                 NewPost()
                 END(1)
-        END(2)
+        if OK != 1:
+            END(2)
