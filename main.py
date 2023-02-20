@@ -10,6 +10,7 @@ def module_exists(module_name):
 def CheckModule(ModuleName):
     # 检测模块是否存在
     if module_exists(ModuleName):
+        pass
     else:
         os.system(f"pip install {ModuleName}")
 CheckModule("requests")
