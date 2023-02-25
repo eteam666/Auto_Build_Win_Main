@@ -265,7 +265,6 @@ def Check():
         DOWNLOAD_PATH = os.path.dirname(os.path.realpath(__file__)) + "\\"
         print ("系统信息",OS_StringName)
         print ("文件将会保存在" + DOWNLOAD_PATH + "\n")
-        print ("服务器赞助商：Catixs")
     if os.path.exists(MountDir):
   # 如果存在，递归删除再创建
         shutil.rmtree(MountDir)
