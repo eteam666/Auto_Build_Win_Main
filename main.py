@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 import os
 DOWNLOAD_PATH = os.getcwd()
 Config_ini = DOWNLOAD_PATH + '\\Config\\Config.ini'
@@ -73,7 +73,7 @@ UseTg = config['Tg']['Use']
 TgToken = config['Tg']['Token']
 Chatid = config['Tg']['Chatid']
 smtp_log_config = {'server': Server,'user': User,'password': PassWord,'sender': Sender,'receiver': Receiver,'subject': Subject}
-Verison =  Fore.RED + '1.2.0'
+Verison =  Fore.RED + '1.2.1'
 updateId = ''
 V = 'Releases'
 TempISO = DOWNLOAD_PATH + '\\Temp\\' + 'ISO'
@@ -148,11 +148,11 @@ def init():
             pass
         conn.commit()
         conn.close()
-    if not os.path.exists(WebDb):
+    if not os.path.exists(Webdb):
         conn = sqlite3.connect(Webdb)
         cursor = conn.cursor()
         cursor.execute('''CREATE TABLE IF NOT EXISTS status (status int)''')
-        cursor.execute("INSERT IF NOT EXISTS INTO status (status) VALUES (2)")
+        cursor.execute("INSERT INTO status (status) VALUES (2)")
         cursor.execute("CREATE TABLE IF NOT EXISTS log (starttime timestamp, endtime timestamp, rid integer, status integer)")
         conn.commit()
         conn.close()
@@ -225,26 +225,6 @@ def Welcome():
     print("官网:https://autobuild.win")
     print("程序版本: " + Verison)
     print("此程序仅支持Windows")
-	resp = urllib.request.urlopen(http://checkip.live/ip)
-    if resp.status == 200:
-        IP = resp.read()
-        data = json.loads(IP)
-        IP = data['data']['ip']
-        IP = hash(IP)
-        GetVer = f'https://check.autobuild.win/{V}.php?ip={IP}'
-        resp = urllib.request.urlopen(GetVer)
-		if resp.status == 200:
-			NewVer = resp.read()
-			data = json.loads(NewVer)
-			NewVer = data['data']['NewVer']
-			Exit = data['data']['Exit']
-			if NewVer != Verison:
-				print("当前程序不是最新版本")
-			NewVer = f'{V}的最新版本是{NewVer}'
-			print(NewVer)
-			if Exit == 1:
-				print("由于服务器要求退出，程序自动退出")
-				exit()
     resp = urllib.request.urlopen(ApiUrl)
     if resp.status == 200:
         NewVerison = resp.read()
@@ -254,6 +234,7 @@ def Welcome():
         NewVerison = data['jsonApiVersion']
         print("UUP API最新版本：" + NewVerison)
     else:
+        Change(0)
 		print("连接到API服务器错误!")
 
     print("""
@@ -313,6 +294,7 @@ def CheckVerison():
         data = json.loads(response.content)
         updateId = data['response']['updateId']
         foundBuild = data['response']["foundBuild"]
+        print(f'您的短版本为{foundBuild}')
     else:
         Change(0)
         logger.log(6)
@@ -462,6 +444,7 @@ if __name__ == '__main__':
         NewLog()
         time.sleep(int(TIME))
         logger = Logger(['console', 'smtp', 'tg'], [{},smtp_log_config])
+	OS=1
         if OK==1:
             Welcome()
         if OK==1:
