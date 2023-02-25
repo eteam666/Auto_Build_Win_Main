@@ -9,8 +9,7 @@
 
 ## 觉得封装(制作)一个属于自己的Windows太难了？想要保持最新版本？    
 没关系，我们来帮你，只需要修改配置文件，RUN!他就能每隔一段时间自动检测版本然后执行配置自动封装打包上传以及新建文章给大众使用。不出30分钟，你就能得心应手，还能在网页监控状态～
-## 最新版本1.2.0
-从1.2.0开始，我们会收集您加密的IP地址，放心，我们不会泄露，继续使用代表您已知晓
+## 最新版本1.2.1
 ## 优势
 * 快速，使用Python。依赖一些第三方库
 * 支持，社区邮件群聊支持
@@ -30,6 +29,9 @@ Catixs
 Python的部分第三方库  
 内测组的全体成员  
 # 更新日志
+### 1.2.1
+* 去除了IP信息收集
+* 修复了一些已知问题
 ### 1.2.0
 * 修复了逻辑问题
 * 修复了潜在的错误
@@ -46,6 +48,5 @@ Python的部分第三方库
 ### 1.0.0
 * 首个版本
 # 赞助商
-![Catixs赞助商Logo](https://my.catixs.net/templates/lagom2/assets/img/logo/logo_big.1493148437.png)   
-<a href="https://my.catixs.net" align="center" target="_blank">服务器(独家)赞助商Catixs</a>   
-<a href="https://afdian.net/a/easysys" align="center">支持一下~,虽然是赞助的服务器，但是您支持了我会给服务器商减少亏损~</a>
+
+<a href="https://afdian.net/a/easysys" align="center">支持一下</a>
