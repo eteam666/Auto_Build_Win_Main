@@ -47,6 +47,7 @@ Python的部分第三方库
 * 改为SQLite数据库
 ### 1.0.0
 * 首个版本
+# 免责声明
+此项目仅提供自定义Windows，使用即代表您有Microsoft授权。本项目不是Microsoft旗下项目，与Microsoft无关，打赏为个人意愿，侵权联系：easysys@163.com
 # 赞助商
-
 <a href="https://afdian.net/a/easysys" align="center">支持一下</a>
