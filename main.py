@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import os
 DOWNLOAD_PATH = os.getcwd()
 Config_ini = DOWNLOAD_PATH + '\\Config\\Config.ini'
@@ -27,7 +27,7 @@ import telegram
 import sqlite3
 import os
 import requests
-from requests import HTTPError
+from requests import HTTPdb.ERROR
 from sys import platform
 import json
 import urllib.request
@@ -81,62 +81,78 @@ MountDir = DOWNLOAD_PATH +  '\\Mount'
 Temp = DOWNLOAD_PATH + '\\Temp'
 cmd = Temp + '\\uup_download_windows.cmd'
 ESD = Temp + '\\' + ImageName + '.esd'
+WIM = Temp + '\\' + ImageName + '.wim'
 Webdb = DOWNLOAD_PATH + '\\Db\\web.db'
 DataDb = DOWNLOAD_PATH + '\\Db\\data.db'
 OK=1
-def ERROR():
-        # 连接到数据库
+class db:
+    def ERROR():
+            # 连接到数据库
+            conn = sqlite3.connect(Webdb)
+            # 创建游标
+            cursor = conn.cursor()
+            if id == 1:
+                status = 1
+            else:
+                status = 2
+            # 更新指定行的值
+            cursor.execute("UPDATE status SET status = ? WHERE rid = ?", (0, rid))
+            # 提交事务
+            conn.commit()
+            # 关闭连接
+            conn.close()
+    def END(id):
+            db.Change
+            # 连接到数据库
+            conn = sqlite3.connect(Webdb)
+            # 创建游标
+            cursor = conn.cursor()
+            # 更新指定行的值
+            cursor.execute("UPDATE log SET endtime = ? WHERE rid = ?", (localtime, rid))
+            # 提交事务
+            conn.commit()
+            # 关闭连接
+            conn.close()
+            # 创建游标
+            cursor = conn.cursor()
+            if id == 1:
+                status = 1
+            else:
+                status = 2
+            # 更新指定行的值
+            cursor.execute("UPDATE log SET status = ? WHERE rid = ?", (status, rid))
+            # 提交事务
+            conn.commit()
+            # 关闭连接
+            conn.close()
+    def NewLog():
+            # 连接到数据库（如果数据库不存在，会自动新建）
+            conn = sqlite3.connect(Webdb)
+            # 创建游标
+            cursor = conn.cursor()
+            db.Change
+            # 插入值
+            cursor.execute("INSERT INTO log(starttime,endtime,rid,status) VALUES (?,?,?,?)", (localtime, None, rid, 3))
+            # 提交事务
+            conn.commit()
+            # 关闭连接
+            conn.close()
+    def Change(id):
+    #修改状态
         conn = sqlite3.connect(Webdb)
-        # 创建游标
         cursor = conn.cursor()
-        if id == 1:
-            status = 1
-        else:
-            status = 2
-        # 更新指定行的值
-        cursor.execute("UPDATE status SET status = ? WHERE rid = ?", (0, rid))
-        # 提交事务
+        cursor.execute("UPDATE status SET status = ?", (id,))
         conn.commit()
-        # 关闭连接
         conn.close()
-def END(id):
-        gettime()
-        # 连接到数据库
-        conn = sqlite3.connect(Webdb)
-        # 创建游标
-        cursor = conn.cursor()
-        # 更新指定行的值
-        cursor.execute("UPDATE log SET endtime = ? WHERE rid = ?", (localtime, rid))
-        # 提交事务
-        conn.commit()
-        # 关闭连接
-        conn.close()
-        # 创建游标
-        cursor = conn.cursor()
-        if id == 1:
-            status = 1
-        else:
-            status = 2
-        # 更新指定行的值
-        cursor.execute("UPDATE log SET status = ? WHERE rid = ?", (status, rid))
-        # 提交事务
-        conn.commit()
-        # 关闭连接
-        conn.close()
-def NewLog():
-        # 连接到数据库（如果数据库不存在，会自动新建）
-        conn = sqlite3.connect(Webdb)
-        # 创建游标
-        cursor = conn.cursor()
-        gettime()
-        # 插入值
-        cursor.execute("INSERT INTO log(starttime,endtime,rid,status) VALUES (?,?,?,?)", (localtime, None, rid, 3))
-        # 提交事务
-        conn.commit()
-        # 关闭连接
-        conn.close()
-def random_string(length):
-    return ''.join(random.choices(string.ascii_uppercase+string.ascii_lowercase+string.digits+string.ascii_uppercase+string.ascii_lowercase, k=length))
+        return
+class ctrl:
+    def random_string(length):
+        return ''.join(random.choices(string.ascii_uppercase+string.ascii_lowercase+string.digits+string.ascii_uppercase+string.ascii_lowercase, k=length))
+    def gettime():
+        # 获取当前时间
+        global localtime
+        localtime = time.localtime()
+        localtime = time.strftime("%Y-%m-%d %H:%M:%S", localtime)
 def init():
     # 初始化程序
     if not os.path.exists(DataDb):
@@ -144,7 +160,7 @@ def init():
         cursor = conn.cursor()
         try:
             cursor.execute("CREATE TABLE IF NOT EXISTS verison (updateId INTEGER)")
-        except sqlite3.OperationalError:
+        except sqlite3.Operationaldb.ERROR:
             pass
         conn.commit()
         conn.close()
@@ -157,26 +173,15 @@ def init():
         conn.commit()
         conn.close()
 
-def Change(id):
-    #修改状态
-    conn = sqlite3.connect(Webdb)
-    cursor = conn.cursor()
-    cursor.execute("UPDATE status SET status = ?", (id,))
-    conn.commit()
-    conn.close()
-    return
-def gettime():
-    # 获取当前时间
-    global localtime
-    localtime = time.localtime()
-    localtime = time.strftime("%Y-%m-%d %H:%M:%S", localtime)
+
+
 class Logger:
     # 日志类
     def __init__(self, log_types, log_configs):
         self.log_types = log_types
         self.log_configs = log_configs
     def log_to_smtp(self, message, config):
-        gettime()
+        db.Change
         msg = f"信息报告: {localtime} :{Subject}\n\n{message}"
         server = smtplib.SMTP()
         server.sendmail(Sender,Receiver, msg)
@@ -186,11 +191,11 @@ class Logger:
             return
         if CN == 1 :
             return
-        gettime()
+        db.Change
         bot = telegram.Bot(token=TgToken)
         bot.send_message(chat_id=Chatid, text=f'最新状态{localtime}:{message}')
     def log_to_console(self, message):
-        gettime()
+        db.Change
         print(localtime + " ： " + message)
     def log(self, id):
         for log_type, log_config in zip(self.log_types, self.log_configs):
@@ -234,20 +239,11 @@ def Welcome():
         NewVerison = data['jsonApiVersion']
         print("UUP API最新版本：" + NewVerison)
     else:
-        Change(0)
-		print("连接到API服务器错误!")
-
-    print("""
-                _          ____        _ _     _  __          ___           _                   
-     /\        | |        |  _ \      (_) |   | | \ \        / (_)         | |                  
-    /  \  _   _| |_ ___   | |_) |_   _ _| | __| |  \ \  /\  / / _ _ __   __| | _____      _____ 
-   / /\ \| | | | __/ _ \  |  _ <| | | | | |/ _` |   \ \/  \/ / | | '_ \ / _` |/ _ \ \ /\ / / __|
-  / ____ \ |_| | || (_) | | |_) | |_| | | | (_| |    \  /\  /  | | | | | (_| | (_) \ V  V /\__ \
- /_/    \_\__,_|\__\___/  |____/ \__,_|_|_|\__,_|     \/  \/   |_|_| |_|\__,_|\___/ \_/\_/ |___/
-""")
+        db.Change(0)
+        print("连接到API服务器错误!")
 def Check():
     #检查环境
-    Change(1)
+    db.Change(1)
     logger.log(1)
     OS_StringName = "系统: "
     if platform == "linux" or platform == "linux2":
@@ -295,7 +291,7 @@ def CheckVerison():
         foundBuild = data['response']["foundBuild"]
         print(f'您的短版本为{foundBuild}')
     else:
-        Change(0)
+        db.Change(0)
         logger.log(6)
         OK=0
     if search_updateId(updateId):
@@ -307,7 +303,7 @@ def CheckVerison():
     logger.log(9)
 def Get():
     # 获取镜像
-    Change(2)
+    db.Change(2)
     logger.log(10)
     GetUrl = f'{UUPUrl}/get.php?id={updateId}&pack={LANG}&edition=core;professional&autodl=2'
     urllib.request.urlretrieve(GetUrl, "uupdown.zip")
@@ -331,7 +327,7 @@ def Get():
     return
 def Build():
     # 开始构建
-    Change(3)
+    db.Change(3)
     logger.log(12)
     files = os.listdir(Temp)
     for file in files:
@@ -368,12 +364,12 @@ def Build():
     return
 def Mount():
     # 挂载镜像
-    Change(4)
+    db.Change(4)
     logger.log(17)
     if(UseESD == 1):
         cmd = 'wimlib-imagex.exe capture ' + MountDir + ' ' + ESD + ' ' + ImageName + '--check --solid'  
     else:
-        cmd = 'dism /Capture-Image /ImageFile:' + Temp +' /CaptureDir:' + MountDir
+        cmd = 'dism /Capture-Image /ImageFile:' + WIM +' /CaptureDir:' + MountDir
     os.system(cmd)
     logger.log(18)
     return
@@ -409,7 +405,7 @@ def fina():
     return
 def Upload():
     # 上传
-    Change(5)
+    db.Change(5)
     logger.log("19")
     if UseRclone:
         for remote in remotes:
@@ -439,11 +435,11 @@ def NewPost():
 if __name__ == '__main__':
     init()
     while True:
-        rid = random_string(8)
-        NewLog()
+        rid = ctrl.random_string()(8)
+        db.NewLog()
         time.sleep(int(TIME))
         logger = Logger(['console', 'smtp', 'tg'], [{},smtp_log_config])
-	OS=1
+        OK=1
         if OK==1:
             Welcome()
         if OK==1:
@@ -463,6 +459,6 @@ if __name__ == '__main__':
                 Upload()
             if OK==1:
                 NewPost()
-                END(1)
+                db.END(1)
         if OK != 1:
-            END(2)
+            db.END(2)
