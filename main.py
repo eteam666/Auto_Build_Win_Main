@@ -27,7 +27,7 @@ import telegram
 import sqlite3
 import os
 import requests
-from requests import HTTPdb.ERROR
+from requests import HTTPError
 from sys import platform
 import json
 import urllib.request
